@@ -57,7 +57,7 @@ while True:
         with myclient:
             dienasgramata = myclient.school.dienasgramata
 
-            db_records = list(dienasgramata.find({"kind": "exercise"}))
+            db_records = list(dienasgramata.find({"kind": "exercise"}, {'_id': 0}))
 
             # db_records = list(dienasgramata.aggregate( [
             # {"$project": {"kind":"$kind", "day":"$day", "subject":"$subject", "exercise":"$exercise",
