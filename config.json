@@ -1,0 +1,9 @@
+{
+  "logging.name": "dienasgramata-db-to-json",
+  "logging.format": "%(asctime)-15s %(levelname)s %(message)s",
+  "logging.file": "dienasgramata-db-to-json.log",
+  "logging.level": 10,
+  "db.url": "mongodb://192.168.1.61:27017/",
+  "export.file.path": "dienasgramata.json",
+  "restart": 900
+}
