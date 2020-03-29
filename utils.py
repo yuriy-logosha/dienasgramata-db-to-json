@@ -14,6 +14,16 @@ import requests
 import json
 import os
 import xml.etree.ElementTree as ET
+from bson import ObjectId
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        if isinstance(o, datetime):
+            return o.strftime("%d.%m.%Y")
+        return json.JSONEncoder.default(self, o)
+
 
 
 """ Logger Configuration """
@@ -402,8 +412,9 @@ def json_from_file(file_name, err_msg=None):
         raise Exception(err_msg if err_msg else "No data loaded.")
     return data
 
+
 def json_to_file(file_name, data):
-    to_file(file_name, json.dumps(data, ensure_ascii=False, indent=2))
+    to_file(file_name, json.dumps(data, ensure_ascii=False, indent=2, cls=JSONEncoder))
 
 
 class _session:

@@ -6,16 +6,6 @@ import datetime
 import pymongo
 
 from utils import json_from_file, json_to_file
-import json
-from bson import ObjectId
-
-class JSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        if isinstance(o, datetime.datetime):
-            return o.strftime("%d.%m.%Y")
-        return json.JSONEncoder.default(self, o)
 
 
 config_file_name = 'config.json'
@@ -72,7 +62,7 @@ while True:
             #, {'$match': {'date': {'$gte': datetime.datetime.utcnow()}}}
             for i in db_records:
                 print(i)
-            json_to_file(config['export.file.path'], JSONEncoder().encode(db_records))
+            json_to_file(config['export.file.path'], db_records)
 
 
     except RuntimeError as e:
