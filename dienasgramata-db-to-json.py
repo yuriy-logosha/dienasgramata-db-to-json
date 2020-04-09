@@ -47,21 +47,13 @@ while True:
         with myclient:
             dienasgramata = myclient.school.dienasgramata
 
-            db_records = list(dienasgramata.find({"kind": "exercise"}, {'_id': 0}))
+            db_records = list([dienasgramata.find({"kind": "exercise"}, {'_id': 0}), dienasgramata.find({"kind": "update_exercise"}, {'_id': 0})])
 
-            # db_records = list(dienasgramata.aggregate( [
-            # {"$project": {"kind":"$kind", "day":"$day", "subject":"$subject", "exercise":"$exercise",
-            #                "date": {
-            #                     "$dateFromString": {
-            #                         "dateString": '$date',
-            #                         "format": "%d.%m.%Y"
-            #                     }
-            #                 }
-            #             }
-            # } ] ))
-            #, {'$match': {'date': {'$gte': datetime.datetime.utcnow()}}}
-            for i in db_records:
-                print(i)
+            all_db_records = []
+            for cur in db_records:
+                all_db_records.append(list(cur))
+                for i in list(cur):
+                    print(i)
             json_to_file(config['export.file.path'], db_records)
 
 
