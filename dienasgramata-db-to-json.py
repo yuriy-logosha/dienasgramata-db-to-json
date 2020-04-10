@@ -53,7 +53,7 @@ while True:
                      {"date": {"$lt": right_border}}
                        ]
                  },
-                {'_id': 0}))
+                {'_id': 0}).sort("date"))
             print("Seeking for records from %s to %s" % (left_border, right_border))
             for i in db_records:
                 print(i)
