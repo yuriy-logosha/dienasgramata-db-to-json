@@ -36,26 +36,28 @@ logger = logging.getLogger(config["logging.name"])
 logger.setLevel(logging_level)
 
 
-
 db_records = []
 
-
+now = datetime.datetime.today()
+left_border = now - datetime.timedelta(days = 7 + datetime.datetime.today().weekday())
+right_border = now + datetime.timedelta(days = 7 - datetime.datetime.today().weekday() - 1 + 7)
 while True:
     try:
         myclient = pymongo.MongoClient(config["db.url"])
-
         with myclient:
             dienasgramata = myclient.school.dienasgramata
-
-            db_records = list([dienasgramata.find({"kind": "exercise"}, {'_id': 0}), dienasgramata.find({"kind": "update_exercise"}, {'_id': 0})])
-
-            all_db_records = []
-            for cur in db_records:
-                all_db_records.append(list(cur))
-                for i in list(cur):
-                    print(i)
+            db_records = list(dienasgramata.find(
+                 {"$and": [
+                     {"kind": "exercise"},
+                     {"date": {"$gt": left_border}},
+                     {"date": {"$lt": right_border}}
+                       ]
+                 },
+                {'_id': 0}))
+            print("Seeking for records from %s to %s" % (left_border, right_border))
+            for i in db_records:
+                print(i)
             json_to_file(config['export.file.path'], db_records)
-
 
     except RuntimeError as e:
         logger.error(e)
