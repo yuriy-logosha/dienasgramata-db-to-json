@@ -38,9 +38,10 @@ logger.setLevel(logging_level)
 
 db_records = []
 
-now = datetime.datetime.today()
-left_border = now - datetime.timedelta(days = 7 + datetime.datetime.today().weekday())
-right_border = now + datetime.timedelta(days = 7 - datetime.datetime.today().weekday() - 1 + 7)
+now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+left_border = now - datetime.timedelta(days = 7 + datetime.datetime.today().weekday()) - datetime.timedelta(seconds=1)
+right_border = now + datetime.timedelta(days = 7 - datetime.datetime.today().weekday() + 7) - datetime.timedelta(seconds=1)
+
 while True:
     try:
         myclient = pymongo.MongoClient(config["db.url"])
