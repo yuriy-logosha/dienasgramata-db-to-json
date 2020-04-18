@@ -47,14 +47,29 @@ while True:
         myclient = pymongo.MongoClient(config["db.url"])
         with myclient:
             dienasgramata = myclient.school.dienasgramata
-            db_records = list(dienasgramata.find(
-                 {"$and": [
-                     {"kind": "exercise"},
-                     {"date": {"$gt": left_border}},
-                     {"date": {"$lt": right_border}}
-                       ]
-                 },
-                {'_id': 0}).sort("date"))
+
+            db_records = list(dienasgramata.aggregate(
+            [
+                { "$sort": { "date": 1 } },
+                {
+                    "$lookup":
+                        {
+                            "from": "teachers",
+                            "localField": "subject",
+                            "foreignField": "subject",
+                            "as": "teacher"
+                        }
+                },
+                { "$unwind": "$teacher" },
+                {'$project':
+                     {
+                         '_id': 0,
+                         'teacher._id': 0,
+                         'teacher.subject': 0
+                     }
+                }
+            ]
+            ))
             print("Seeking for records from %s to %s" % (left_border, right_border))
             for i in db_records:
                 print(i)
