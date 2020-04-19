@@ -60,7 +60,7 @@ while True:
                             "as": "teacher"
                         }
                 },
-                { "$unwind": "$teacher" },
+                
                 {'$project':
                      {
                          '_id': 0,
@@ -73,6 +73,7 @@ while True:
             print("Seeking for records from %s to %s" % (left_border, right_border))
             for i in db_records:
                 print(i)
+            print(len(db_records))
             json_to_file(config['export.file.path'], db_records)
 
     except RuntimeError as e:
